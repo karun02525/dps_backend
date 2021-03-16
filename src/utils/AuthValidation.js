@@ -1,0 +1,46 @@
+import Joi from "@hapi/joi";
+
+//for Student Register validation
+export const studentRegisterValidation = (data) => {
+  const schema = {
+    fname: Joi.string().min(3).required(),
+    lname: Joi.string().min(3).required(),
+    surname: Joi.string().min(3).required(),
+    gender: Joi.string().min(4).required(),
+    dob: Joi.string().min(10).max(10).required(),
+    phone: Joi.string()
+      .regex(/^[0-9]{10}$/)
+      .required()
+      .error(() => "Please enter valid mobile number"),
+    email: Joi.string().min(5).max(40).required().email(),
+    rollno: Joi.string().min(6).max(10).required(),
+    classes: Joi.string().min(1).max(5).required(),
+    section: Joi.string().min(1).max(5).required(),
+    address: Joi.string().min(15).max(150).required(),
+    postoffice: Joi.string().min(4).max(15).required(),
+    pincode: Joi.string()
+      .regex(/^[0-9]{6}$/)
+      .required()
+      .error(() => "Please enter valid pincode"),
+    state: Joi.string().min(5).max(20).required(),
+    dist: Joi.string().min(5).max(20).required(),
+    country: Joi.string().min(5).max(20).required(),
+    father_fname: Joi.string().min(3).max(15).required(),
+    father_lname: Joi.string().min(3).max(15).required(),
+    father_sname: Joi.string().min(3).max(15).required(),
+    mother_fname: Joi.string().min(3).max(15).required(),
+    mother_lname: Joi.string().min(3).max(15).required(),
+    mother_sname: Joi.string().min(3).max(15).required(),
+  };
+
+  return Joi.validate(data, schema);
+};
+
+//login
+export const studentLoginValidation = (data) => {
+  const schema = {
+    rollno: Joi.string().min(6).required(),
+    password: Joi.string().min(5).required(),
+  };
+  return Joi.validate(data, schema);
+};
