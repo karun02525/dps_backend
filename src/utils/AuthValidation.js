@@ -44,3 +44,48 @@ export const studentLoginValidation = (data) => {
   };
   return Joi.validate(data, schema);
 };
+
+//for Teacher Register validation
+export const teacherRegisterValidation = (data) => {
+  const schema = {
+    fname: Joi.string().min(3).required(),
+    lname: Joi.string().min(3).required(),
+    surname: Joi.string().min(3).required(),
+    gender: Joi.string().min(4).required(),
+    dob: Joi.string().min(10).max(10).required(),
+    phone: Joi.string()
+      .regex(/^[0-9]{10}$/)
+      .required()
+      .error(() => "Please enter valid mobile number"),
+    alternate_no: Joi.string()
+      .regex(/^[0-9]{10}$/)
+      .required()
+      .error(() => "Please enter valid mobile number"),
+    email: Joi.string().min(5).max(40).required().email(),
+    registration_no: Joi.string().min(6).max(10).required(),
+    qualification: Joi.string().min(3).max(15).required(),
+    address: Joi.string().min(15).max(150).required(),
+    postoffice: Joi.string().min(4).max(15).required(),
+    pincode: Joi.string()
+      .regex(/^[0-9]{6}$/)
+      .required()
+      .error(() => "Please enter valid pincode"),
+    state: Joi.string().min(5).max(20).required(),
+    dist: Joi.string().min(5).max(20).required(),
+    country: Joi.string().min(5).max(20).required(),
+    parent_fname: Joi.string().min(3).max(15).required(),
+    parent_lname: Joi.string().min(3).max(15).required(),
+    parent_sname: Joi.string().min(3).max(15).required(),
+  };
+
+  return Joi.validate(data, schema);
+};
+
+//for Teacher login
+export const teacherLoginValidation = (data) => {
+  const schema = {
+    registration_no: Joi.string().min(6).max(10).required(),
+    password: Joi.string().min(5).max(20).required(),
+  };
+  return Joi.validate(data, schema);
+};
