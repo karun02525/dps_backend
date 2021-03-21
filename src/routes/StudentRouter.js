@@ -6,6 +6,6 @@ import { getUsers, getuser } from "../controllers/student/StudentController.js";
 
 router.get("/", auth, getUsers);
 
-router.get("/:rollno", auth, getuser);
+router.get("/:id", auth, getuser);
 
 export default router;

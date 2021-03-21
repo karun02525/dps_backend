@@ -7,6 +7,10 @@ let classSchema = new mongoose.Schema({
     min: 2,
     max: 10,
   },
+  section: {
+    type: Array,
+    required: true,
+  },
   date: {
     type: Date,
     default: Date.now,

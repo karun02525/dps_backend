@@ -13,9 +13,11 @@ export const studentRegisterValidation = (data) => {
       .required()
       .error(() => "Please enter valid mobile number"),
     email: Joi.string().min(5).max(40).required().email(),
-    rollno: Joi.string().min(6).max(10).required(),
-    classes: Joi.string().min(1).max(5).required(),
+    rollno: Joi.string().min(1).max(2).required(),
+    class_id: Joi.string().min(20).max(30).required(),
+    class_name: Joi.string().min(2).max(5).required(),
     section: Joi.string().min(1).max(5).required(),
+    parent_id: Joi.string().min(6).max(6).required(),
     address: Joi.string().min(15).max(150).required(),
     postoffice: Joi.string().min(4).max(15).required(),
     pincode: Joi.string()
@@ -39,7 +41,7 @@ export const studentRegisterValidation = (data) => {
 //login
 export const studentLoginValidation = (data) => {
   const schema = {
-    rollno: Joi.string().min(6).required(),
+    parent_id: Joi.string().min(6).required(),
     password: Joi.string().min(5).required(),
   };
   return Joi.validate(data, schema);

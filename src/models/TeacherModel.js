@@ -34,4 +34,4 @@ TeacherRegSchema.method("toJSON", function () {
   return object;
 });
 
-export default new mongoose.model("Teacher-register", TeacherRegSchema);
+export default new mongoose.model("reg-teacher", TeacherRegSchema);

@@ -8,15 +8,16 @@ let studentRegSchema = new mongoose.Schema({
   phone: String,
   dob: String,
   rollno: String,
-  classes:String,
-  section:String,
+  class_id: String,
+  section: String,
   address: String,
   pincode: String,
   state: String,
   dist: String,
-  postoffice:String,
-  country:String,
+  postoffice: String,
+  country: String,
   password: String,
+  parent_id: String,
   student_avatar: String,
   father_avatar: String,
   mother_avatar: String,
@@ -26,10 +27,10 @@ let studentRegSchema = new mongoose.Schema({
   mother_fname: String,
   mother_lname: String,
   mother_sname: String,
-  student_doc:String,
-  parent_doc:String,
-  signature:String,
-  recept_no:String,
+  student_doc: String,
+  parent_doc: String,
+  signature: String,
+  recept_no: String,
   token: String,
 
   date: {
@@ -44,4 +45,4 @@ studentRegSchema.method("toJSON", function () {
   return object;
 });
 
-export default new mongoose.model("Student-register", studentRegSchema);
+export default new mongoose.model("reg-student", studentRegSchema);

@@ -15,7 +15,7 @@ export const getUsers = async (req, res) => {
 
 export const getuser = async (req, res) => {
   try {
-    const data = await User.findOne({ rollno: req.params.rollno });
+    const data = await User.findOne({ _id: req.params.id });
     res.json({
       message: "geting data successfully",
       data: data,

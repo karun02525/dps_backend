@@ -8,6 +8,7 @@ import {
 import dotevn from "dotenv";
 dotevn.config();
 
+//Register teacher................................................................
 export const createUser = async (req, res) => {
   //validation the data
   const { error } = teacherRegisterValidation(req.body);
