@@ -1,5 +1,6 @@
 import Joi from "@hapi/joi";
 
+//-------Class validation--------------------------
 export const classValidation = (data) => {
   return Joi.validate(data, {
     classname: Joi.string()
@@ -14,6 +15,7 @@ export const classValidation = (data) => {
   });
 };
 
+//-------------Assign-------------------------
 export const assignClassValidation = (data) => {
   return Joi.validate(data, {
     class_id: Joi.string()

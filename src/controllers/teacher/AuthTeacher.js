@@ -12,10 +12,7 @@ dotevn.config();
 export const createUser = async (req, res) => {
   //validation the data
   const { error } = teacherRegisterValidation(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ [error.details[0].context.key]: error.details[0].message });
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   //checking if the user is already  in the databae
   const regNoExist = await User.findOne({
@@ -35,7 +32,7 @@ export const createUser = async (req, res) => {
     const savedUser = await user.save();
     res.status(201).json({
       status: "success",
-      message: "user created successfully",
+      message: "Teacher created successfully",
       data: { _id: savedUser._id },
     });
   } catch (error) {

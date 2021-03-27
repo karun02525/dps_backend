@@ -16,4 +16,4 @@ assignClass.method("toJSON", function () {
   return object;
 });
 
-export default mongoose.model("AssignClass", assignClass);
+export default mongoose.model("class-assign", assignClass);

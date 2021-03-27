@@ -4,7 +4,7 @@ import { auth } from "../utils/verifyToken.js";
 
 import { getUsers, getuser } from "../controllers/teacher/TeacherController.js";
 
-router.get("/", auth, getUsers);
+router.get("/", getUsers);
 
 router.get("/:id", auth, getuser);
 

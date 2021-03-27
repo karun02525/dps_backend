@@ -11,10 +11,7 @@ dotevn.config();
 export const createUser = async (req, res) => {
   //validation the data
   const { error } = studentRegisterValidation(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ [error.details[0].context.key]: error.details[0].message });
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   //checking if the user is already  in the databae
   const rollnoExist = await User.findOne({ rollno: req.body.rollno });

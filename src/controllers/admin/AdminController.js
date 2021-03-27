@@ -1,5 +1,6 @@
 import ClassesModel from "../../models/ClassesModel.js";
 import AssignClassModel from "../../models/AssignClassModel.js";
+import Student from "../../models/StudentModel.js";
 
 import {
   classValidation,
@@ -80,5 +81,27 @@ export const assignClasses = async (req, res) => {
     });
   } catch (error) {
     res.status(500).send(error);
+  }
+};
+
+// Get Students vai class id and section show list ------------------------------------------------------------------------
+export const getStudents = async (req, res) => {
+  const class_id = req.query.class_id;
+  try {
+    const data = await Student.find({
+      class_id: class_id,
+    });
+    if (!data)
+      return res
+        .status(400)
+        .json({ message: "students is not found", status: "faild" });
+
+    res.json({
+      message: "students list",
+      data: data,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
   }
 };

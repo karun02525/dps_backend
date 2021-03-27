@@ -20,6 +20,9 @@ let TeacherRegSchema = new mongoose.Schema({
   parent_fname: String,
   parent_lname: String,
   parent_sname: String,
+  parent_phone: String,
+  parent_occupation: String,
+  teacher_picture: String,
   token: String,
 
   date: {
