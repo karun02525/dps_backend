@@ -84,6 +84,26 @@ export const assignClasses = async (req, res) => {
   }
 };
 
+// Get Assign Teacher list ------------------------------------------------------------------------
+export const getAssignTeacher = async (req, res) => {
+  try {
+    const data = await AssignClassModel.find();
+    if (Object.entries(data).length === 0) {
+      return res.status(400).json({
+        message: "assign list not found",
+        status: "faild",
+      });
+    }
+    res.json({
+      message: "assign teacher a classes list",
+      data: data,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
 // Get Students vai class id and section show list ------------------------------------------------------------------------
 export const getStudents = async (req, res) => {
   const class_id = req.query.class_id;

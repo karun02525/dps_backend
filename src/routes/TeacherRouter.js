@@ -2,7 +2,13 @@ import express from "express";
 const router = express.Router();
 import { auth } from "../utils/verifyToken.js";
 
-import { getUsers, getuser } from "../controllers/teacher/TeacherController.js";
+import {
+  getUsers,
+  getuser,
+  getStudents,
+} from "../controllers/teacher/TeacherController.js";
+
+router.get("/get-students/", getStudents);
 
 router.get("/", getUsers);
 

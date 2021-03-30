@@ -41,10 +41,7 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   //validation the data
   const { error } = studentLoginValidation(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ [error.details[0].context.key]: error.details[0].message });
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   //checking if the email exist
   const user = await User.findOne({ parent_id: req.body.parent_id });
@@ -70,7 +67,7 @@ export const loginUser = async (req, res) => {
   );
 
   const response = {
-    stundents: userData,
+    students: userData,
     parent_id: req.body.parent_id,
     token: token,
   };

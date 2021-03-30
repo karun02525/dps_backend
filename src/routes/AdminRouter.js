@@ -6,6 +6,7 @@ import {
   getClasses,
   assignClasses,
   getStudents,
+  getAssignTeacher,
 } from "../controllers/admin/AdminController.js";
 
 router.get("/classes", getClasses);
@@ -13,6 +14,8 @@ router.get("/classes", getClasses);
 router.post("/classes", createClasses);
 
 router.post("/assign-teacher", assignClasses);
+
+router.get("/assign-teacher", getAssignTeacher);
 
 router.get("/get-student", getStudents);
 
