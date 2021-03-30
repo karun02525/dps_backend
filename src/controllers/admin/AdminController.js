@@ -1,10 +1,12 @@
 import ClassesModel from "../../models/ClassesModel.js";
 import AssignClassModel from "../../models/AssignClassModel.js";
+import AssignSectionModel from "../../models/AssignSectionModel.js";
 import Student from "../../models/StudentModel.js";
 
 import {
   classValidation,
   assignClassValidation,
+  assignSectionValidation,
 } from "../../utils/AdminValidation.js";
 
 //Create class -----------------------------------------------------------------------
@@ -60,10 +62,7 @@ export const getClasses = async (req, res) => {
 // Assign class to Teacher-----------------------------------------------------------------
 export const assignClasses = async (req, res) => {
   const { error } = assignClassValidation(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ [error.details[0].context.key]: error.details[0].message });
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   const teacherExist = await AssignClassModel.findOne({
     teacher_id: req.body.teacher_id,
@@ -77,6 +76,38 @@ export const assignClasses = async (req, res) => {
     res.status(201).json({
       status: "success",
       message: "teacher assigned successfully",
+      data: { _id: savedData._id },
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+// Assign class Section to student-----------------------------------------------------------------
+export const assignSection = async (req, res) => {
+  const { error } = assignSectionValidation(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
+  const studentExist = await AssignSectionModel.findOne({
+    student_id: req.body.student_id,
+  });
+
+  if (studentExist)
+    return res
+      .status(400)
+      .json({ message: "this student already assign section" });
+
+  const user = await Student.findOneAndUpdate(
+    { _id: req.body.student_id },
+    { $set: { section: req.body.section } },
+    { upsert: true }
+  );
+
+  try {
+    const savedData = await new AssignSectionModel(req.body).save();
+    res.status(201).json({
+      status: "success",
+      message: "student section assigned successfully",
       data: { _id: savedData._id },
     });
   } catch (error) {
@@ -103,6 +134,26 @@ export const getAssignTeacher = async (req, res) => {
     res.status(500).send({ message: "something went wrong", status: "faild" });
   }
 };
+
+// Get Assign Section list ------------------------------------------------------------------------
+// export const getAssignTeacher = async (req, res) => {
+//   try {
+//     const data = await AssignClassModel.find();
+//     if (Object.entries(data).length === 0) {
+//       return res.status(400).json({
+//         message: "assign list not found",
+//         status: "faild",
+//       });
+//     }
+//     res.json({
+//       message: "assign teacher a classes list",
+//       data: data,
+//       status: "success",
+//     });
+//   } catch (error) {
+//     res.status(500).send({ message: "something went wrong", status: "faild" });
+//   }
+// };
 
 // Get Students vai class id and section show list ------------------------------------------------------------------------
 export const getStudents = async (req, res) => {

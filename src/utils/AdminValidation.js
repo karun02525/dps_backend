@@ -15,7 +15,7 @@ export const classValidation = (data) => {
   });
 };
 
-//-------------Assign-------------------------
+//-------------Assign--Class teacher-----------------------
 export const assignClassValidation = (data) => {
   return Joi.validate(data, {
     class_id: Joi.string()
@@ -32,5 +32,25 @@ export const assignClassValidation = (data) => {
       .min(10)
       .max(30)
       .error(() => "Please enter valid teacher id"),
+  });
+};
+
+//-------------Assign--Class section-----------------------
+export const assignSectionValidation = (data) => {
+  return Joi.validate(data, {
+    class_id: Joi.string()
+      .min(10)
+      .max(30)
+      .required()
+      .error(() => "Please enter valid class id"),
+    section: Joi.string()
+      .required()
+      .min(1)
+      .error(() => "Please enter valid section name"),
+    student_id: Joi.string()
+      .required()
+      .min(10)
+      .max(30)
+      .error(() => "Please enter valid student id"),
   });
 };

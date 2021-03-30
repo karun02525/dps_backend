@@ -15,6 +15,7 @@ export const studentRegisterValidation = (data) => {
     email: Joi.string().min(5).max(40).required().email(),
     rollno: Joi.string().min(1).max(2).required(),
     class_id: Joi.string().min(20).max(30).required(),
+    class_name: Joi.string().min(2).max(10).required(),
     parent_id: Joi.string().min(6).max(6).required(),
     address: Joi.string().min(15).max(150).required(),
     post_office: Joi.string().min(4).max(15).required(),
@@ -32,6 +33,7 @@ export const studentRegisterValidation = (data) => {
     mother_fname: Joi.string().min(3).max(15).required(),
     mother_lname: Joi.string().min(3).max(15).required(),
     mother_sname: Joi.string().min(3).max(15).required(),
+    parent_occupation: Joi.string().min(3).max(15).required(),
     parent_phone: Joi.string()
       .regex(/^[0-9]{10}$/)
       .required()
@@ -96,7 +98,7 @@ export const teacherRegisterValidation = (data) => {
 //for Teacher login
 export const teacherLoginValidation = (data) => {
   const schema = {
-    registration_no: Joi.string().min(6).max(10).required(),
+    registration_no: Joi.string().min(2).max(10).required(),
     password: Joi.string().min(5).max(20).required(),
   };
   return Joi.validate(data, schema);
