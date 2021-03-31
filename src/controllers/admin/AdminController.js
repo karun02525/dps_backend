@@ -2,6 +2,7 @@ import ClassesModel from "../../models/ClassesModel.js";
 import AssignClassModel from "../../models/AssignClassModel.js";
 import AssignSectionModel from "../../models/AssignSectionModel.js";
 import Student from "../../models/StudentModel.js";
+import TeacherModel from "../../models/TeacherModel.js";
 
 import {
   classValidation,
@@ -71,6 +72,18 @@ export const assignClasses = async (req, res) => {
   if (teacherExist)
     return res.status(400).json({ message: "teacher already assign" });
 
+  const user = await TeacherModel.findOneAndUpdate(
+    { _id: req.body.teacher_id },
+    {
+      $set: {
+        section: req.body.section,
+        class_id: req.body.class_id,
+        class_name: req.body.class_name,
+      },
+    },
+    { upsert: true }
+  );
+
   try {
     const savedData = await new AssignClassModel(req.body).save();
     res.status(201).json({
@@ -99,7 +112,7 @@ export const assignSection = async (req, res) => {
 
   const user = await Student.findOneAndUpdate(
     { _id: req.body.student_id },
-    { $set: { section: req.body.section } },
+    { $set: { section: req.body.section, class_name: req.body.class_name } },
     { upsert: true }
   );
 

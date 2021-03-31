@@ -23,6 +23,10 @@ export const assignClassValidation = (data) => {
       .max(30)
       .required()
       .error(() => "Please enter valid class id"),
+    class_name: Joi.string()
+      .required()
+      .min(1)
+      .error(() => "Please enter valid class name"),
     section: Joi.string()
       .required()
       .min(1)
@@ -43,6 +47,10 @@ export const assignSectionValidation = (data) => {
       .max(30)
       .required()
       .error(() => "Please enter valid class id"),
+    class_name: Joi.string()
+      .required()
+      .min(1)
+      .error(() => "Please enter valid class name"),
     section: Joi.string()
       .required()
       .min(1)

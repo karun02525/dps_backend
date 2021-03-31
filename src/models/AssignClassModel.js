@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 let assignClass = new mongoose.Schema({
   class_id: String,
+  class_name: String,
   section: String,
   teacher_id: String,
   date: {

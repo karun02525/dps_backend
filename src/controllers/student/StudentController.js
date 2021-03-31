@@ -16,16 +16,16 @@ export const getUsers = async (req, res) => {
   }
 };
 
-//----------Get Profile-----------------------------------
+//----------Get Profile students or teacher-----------------------------------
 export const getProfile = async (req, res) => {
-  const id = req.params.id;
+  const student_id = req.query.student_id;
   let teacherData = null;
   try {
     if (id.length != 24)
       return res.status(400).json({ message: "Please valid id" });
 
     //checking if the user exist
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: student_id });
     if (!user)
       return res
         .status(400)
