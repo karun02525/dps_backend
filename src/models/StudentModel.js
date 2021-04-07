@@ -8,10 +8,7 @@ let studentRegSchema = new mongoose.Schema({
   gender: String,
   phone: String,
   dob: String,
-  rollno: String,
   class_id: String,
-  class_name: String,
-  section: String,
   address: String,
   post_office: String,
   police_station: String,
@@ -34,7 +31,6 @@ let studentRegSchema = new mongoose.Schema({
   parent_occupation: String,
   student_doc: String,
   parent_doc: String,
-  signature: String,
   recept_no: String,
   token: String,
 

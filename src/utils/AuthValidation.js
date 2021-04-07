@@ -13,9 +13,7 @@ export const studentRegisterValidation = (data) => {
       .required()
       .error(() => "Please enter valid mobile number"),
     email: Joi.string().min(5).max(40).required().email(),
-    rollno: Joi.string().min(1).max(2).required(),
     class_id: Joi.string().min(20).max(30).required(),
-    class_name: Joi.string().min(2).max(10).required(),
     parent_id: Joi.string().min(6).max(6).required(),
     address: Joi.string().min(15).max(150).required(),
     post_office: Joi.string().min(4).max(15).required(),

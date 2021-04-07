@@ -9,6 +9,6 @@ import {
 
 router.get("/", auth, getUsers);
 
-router.get("/:id", getProfile);
+router.get("/get-profile", getProfile);
 
 export default router;

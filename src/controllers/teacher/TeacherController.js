@@ -30,8 +30,32 @@ export const getuser = async (req, res) => {
   }
 };
 
+//----------Get Profile teacher or students-----------------------------------
+export const getProfile = async (req, res) => {
+  const teacher_id = req.query.teacher_id;
+  try {
+    if (teacher_id.length != 24)
+      return res.status(400).json({ message: "Please valid id" });
+
+    //checking if the user exist
+    const user = await Teacher.findOne({ _id: teacher_id });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "teacher is not found", status: "faild" });
+
+    res.json({
+      message: "geting data successfully",
+      status: "success",
+      data: { student: user, teacher: teacherData },
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
 // Get Students vai teacher id and section show list ------------------------------------------------------------------------
-export const getStudents = async (req, res) => {
+export const getSt = async (req, res) => {
   const teacher_id = req.query.teacher_id;
   try {
     const data = await AssignClassModel.findOne({
@@ -41,8 +65,6 @@ export const getStudents = async (req, res) => {
       return res
         .status(400)
         .json({ message: "assign teacher is not found", status: "faild" });
-
-    console.log("########## " + data.class_id);
 
     const studentData = await Students.find({
       class_id: data.class_id,
