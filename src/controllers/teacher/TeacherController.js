@@ -1,6 +1,6 @@
 import User from "../../models/TeacherModel.js";
 import Students from "../../models/StudentModel.js";
-import AssignClassModel from "../../models/AssignClassModel.js";
+import AssignClassModel from "../../models/AssignTeacherModel.js";
 
 export const getUsers = async (req, res) => {
   try {

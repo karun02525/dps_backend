@@ -1,13 +1,14 @@
 import ClassesModel from "../../models/ClassesModel.js";
-import AssignClassModel from "../../models/AssignClassModel.js";
-import AssignSectionModel from "../../models/AssignSectionModel.js";
-import Student from "../../models/StudentModel.js";
+import StudentModel from "../../models/StudentModel.js";
+import ParentModel from "../../models/ParentModel.js";
+import AssignTeacherModel from "../../models/AssignTeacherModel.js";
+import AssignRollnoModel from "../../models/AssignRollnoModel.js";
 import TeacherModel from "../../models/TeacherModel.js";
 
 import {
   classValidation,
-  assignClassValidation,
-  assignSectionValidation,
+  assignTeacherValidation,
+  assignRollnoValidation,
 } from "../../utils/AdminValidation.js";
 
 //Create class -----------------------------------------------------------------------
@@ -60,32 +61,60 @@ export const getClasses = async (req, res) => {
   }
 };
 
+// Get parent list ------------------------------------------------------------------------
+export const getParents = async (req, res) => {
+  try {
+    const data = await ParentModel.find();
+    if (Object.entries(data).length === 0) {
+      return res.status(400).json({
+        message: "parent list not found",
+        status: "faild",
+      });
+    }
+    res.json({
+      message: "parent list",
+      data: data,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
+// Get Students search vai class id show list ------------------------------------------------------------------------
+export const getStudents = async (req, res) => {
+  const class_id = req.query.class_id;
+  try {
+    const data = await StudentModel.find({ class_id: class_id});
+    if (Array.isArray(data) && data.length===0)
+      return res
+        .status(400)
+        .json({ message: "students is not found", status: "faild" });
+
+    res.json({
+      message: "students list",
+      data: data,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
 // Assign class to Teacher-----------------------------------------------------------------
-export const assignClasses = async (req, res) => {
-  const { error } = assignClassValidation(req.body);
+export const assignTeacher = async (req, res) => {
+  const { error } = assignTeacherValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const teacherExist = await AssignClassModel.findOne({
+  const teacherExist = await AssignTeacherModel.findOne({
     teacher_id: req.body.teacher_id,
   });
 
   if (teacherExist)
     return res.status(400).json({ message: "teacher already assign" });
 
-  const user = await TeacherModel.findOneAndUpdate(
-    { _id: req.body.teacher_id },
-    {
-      $set: {
-        section: req.body.section,
-        class_id: req.body.class_id,
-        class_name: req.body.class_name,
-      },
-    },
-    { upsert: true }
-  );
-
   try {
-    const savedData = await new AssignClassModel(req.body).save();
+    const savedData = await new AssignTeacherModel(req.body).save();
     res.status(201).json({
       status: "success",
       message: "teacher assigned successfully",
@@ -96,31 +125,31 @@ export const assignClasses = async (req, res) => {
   }
 };
 
-// Assign class Section to student-----------------------------------------------------------------
-export const assignSection = async (req, res) => {
-  const { error } = assignSectionValidation(req.body);
+// Assign Class,Section,Roll No to student-----------------------------------------------------------------
+export const assignRollno = async (req, res) => {
+  const { error } = assignRollnoValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const studentExist = await AssignSectionModel.findOne({
+  const studentExist = await AssignRollnoModel.findOne({
     student_id: req.body.student_id,
   });
 
   if (studentExist)
     return res
       .status(400)
-      .json({ message: "this student already assign section" });
+      .json({ message: "the student roll no already exits" });
 
-  const user = await Student.findOneAndUpdate(
-    { _id: req.body.student_id },
-    { $set: { section: req.body.section, class_name: req.body.class_name } },
-    { upsert: true }
-  );
+  // const user = await Student.findOneAndUpdate(
+  //   { _id: req.body.student_id },
+  //   { $set: { section: req.body.section, class_name: req.body.class_name } },
+  //   { upsert: true }
+  // );
 
   try {
-    const savedData = await new AssignSectionModel(req.body).save();
+    const savedData = await new AssignRollnoModel(req.body).save();
     res.status(201).json({
       status: "success",
-      message: "student section assigned successfully",
+      message: "student roll no assigned successfully",
       data: { _id: savedData._id },
     });
   } catch (error) {
@@ -168,24 +197,3 @@ export const getAssignTeacher = async (req, res) => {
 //   }
 // };
 
-// Get Students vai class id and section show list ------------------------------------------------------------------------
-export const getStudents = async (req, res) => {
-  const class_id = req.query.class_id;
-  try {
-    const data = await Student.find({
-      class_id: class_id,
-    });
-    if (!data)
-      return res
-        .status(400)
-        .json({ message: "students is not found", status: "faild" });
-
-    res.json({
-      message: "students list",
-      data: data,
-      status: "success",
-    });
-  } catch (error) {
-    res.status(500).send({ message: "something went wrong", status: "faild" });
-  }
-};

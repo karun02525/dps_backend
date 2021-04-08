@@ -23,7 +23,7 @@ app.use("/api/teacher", AuthTeacherRouter);
 
 app.use("/api/teacher", TeacherRouter);
 
-app.use("/api", AdminRouter);
+app.use("/api/admin", AdminRouter);
 
 app.listen(PORT, () => {
   console.log(`server runging on port ${PORT}`);

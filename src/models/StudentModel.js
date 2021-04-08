@@ -16,7 +16,6 @@ let studentRegSchema = new mongoose.Schema({
   state: String,
   country: String,
   pincode: String,
-  password: String,
   parent_id: String,
   student_picture: String,
   father_avatar: String,

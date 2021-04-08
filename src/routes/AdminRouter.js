@@ -4,22 +4,25 @@ const router = express.Router();
 import {
   createClasses,
   getClasses,
-  assignClasses,
+  getParents,
   getStudents,
+  assignTeacher,
   getAssignTeacher,
-  assignSection,
+  assignRollno,
 } from "../controllers/admin/AdminController.js";
-
-router.get("/classes", getClasses);
 
 router.post("/classes", createClasses);
 
-router.post("/assign-teacher", assignClasses);
+router.get("/classes", getClasses);
+
+router.get("/parents", getParents);
+
+router.get("/students", getStudents);
+
+router.post("/assign-teacher", assignTeacher);
 
 router.get("/assign-teacher", getAssignTeacher);
 
-router.post("/assign-section", assignSection);
-
-router.get("/get-student", getStudents);
+router.post("/assign-rollno", assignRollno);
 
 export default router;
