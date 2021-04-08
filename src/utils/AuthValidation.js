@@ -14,7 +14,7 @@ export const studentRegisterValidation = (data) => {
       .error(() => "Please enter valid mobile number"),
     email: Joi.string().min(5).max(40).required().email(),
     class_id: Joi.string().min(20).max(30).required(),
-    parent_id: Joi.string().min(6).max(6).trim().required(),
+    parent_id: Joi.string().min(5).max(5).trim().required(),
     address: Joi.string().min(15).max(150).required(),
     post_office: Joi.string().min(4).max(15).required(),
     police_station: Joi.string().min(4).max(15).required(),
@@ -41,7 +41,6 @@ export const studentRegisterValidation = (data) => {
 
   return Joi.validate(data, schema);
 };
-
 
 //for parent Register validation
 export const parentRegValidation = (data) => {
@@ -71,7 +70,7 @@ export const teacherRegisterValidation = (data) => {
     lname: Joi.string().min(3).required(),
     surname: Joi.string().min(3).required(),
     gender: Joi.string().min(4).required(),
-    dob: Joi.string().min(10).max(10).required(),
+    dob: Joi.string().min(8).max(12).required(),
     phone: Joi.string()
       .regex(/^[0-9]{10}$/)
       .required()

@@ -33,30 +33,40 @@ export const getProfile = async (req, res) => {
         .json({ message: "students is not found", status: "faild" });
 
     const userData = await User.aggregate([
-          { $match: { _id: mongoose.Types.ObjectId(student_id) } },
-          {
-            $project: {
-              password:0,
-              __v:0,
-              date:0,
-            },
-          },
-          {
-            $lookup: {
-              from: "rollno-assigns",
-              localField: "class_id",
-              foreignField: "class_id",
-              as: "classes",
-            },
-          },
-          { $unwind: "$classes" },
-        ]);
-
+      { $match: { _id: mongoose.Types.ObjectId(student_id) } },
+      {
+        $lookup: {
+          from: "rollno-assigns",
+          localField: "class_id",
+          foreignField: "class_id",
+          as: "classes",
+        },
+      },
+      { $unwind: "$classes" },
+      {
+        $lookup: {
+          from: "teacher-assigns",
+          localField: "class_id",
+          foreignField: "class_id",
+          as: "teacher-assigns",
+        },
+      },
+      { $unwind: "$teacher-assigns" },
+      {
+        $lookup: {
+          from: "reg-teachers",
+          localField: "teacher_id",
+          foreignField: "teacher_id",
+          as: "reg-teachers",
+        },
+      },
+      { $unwind: "$reg-teachers" },
+    ]);
 
     res.json({
       message: "geting data successfully",
       status: "success",
-      data: { student: userData, teacher: "" },
+      data: userData,
     });
   } catch (error) {
     res.status(500).send({ message: "something went wrong", status: "faild" });

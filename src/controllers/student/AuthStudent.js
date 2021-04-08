@@ -108,8 +108,9 @@ export const loginParent = async (req, res) => {
         surname: 1,
         class_id: 1,
         student_picture: 1,
-        "classes.class_name": 1,
-        "classes.section": 1,
+        class_name: "$classes.class_name",
+        section: "$classes.section",
+        roll_no: "$classes.roll_no",
       },
     },
   ]);
