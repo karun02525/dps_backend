@@ -137,9 +137,7 @@ export const assignRollno = async (req, res) => {
   });
 
   if (studentExist)
-    return res
-      .status(400)
-      .json({ message: "the student roll no already exits" });
+    return res.status(400).json({ message: "the student already exits" });
 
   const sectionExist = await AssignRollnoModel.findOne({
     section: req.body.section,

@@ -92,7 +92,7 @@ export const loginParent = async (req, res) => {
 
   const userData = await User.aggregate([
     { $match: { parent_id: req.body.parent_id } },
-    { "$addFields": { "userId": { "$toString": "$_id" }}},
+    { $addFields: { userId: { $toString: "$_id" } } },
     {
       $lookup: {
         from: "rollno-assigns",
@@ -101,7 +101,7 @@ export const loginParent = async (req, res) => {
         as: "classes",
       },
     },
-   { $unwind: "$classes" },
+    { $unwind: "$classes" },
     {
       $project: {
         fname: 1,
@@ -119,7 +119,7 @@ export const loginParent = async (req, res) => {
   //const classData = await AssignRollnoModel.find({});
 
   const response = {
-    data: userData,
+    students: userData,
     parent_id: req.body.parent_id,
     token: token,
   };

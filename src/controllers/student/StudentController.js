@@ -22,33 +22,48 @@ export const getUsers = async (req, res) => {
 export const getProfile = async (req, res) => {
   const student_id = req.query.student_id;
   let output = null;
-  let assignRoll=null;
-  let teacher=null;
+  let assignRoll = null;
+  let teacher = null;
   try {
     if (student_id.length != 24)
       return res.status(400).json({ message: "Please valid id" });
 
     //checking if the user exist
-    const user = await User.findOne({ _id: student_id },{class_id:0});
+    const user = await User.findOne({ _id: student_id });
     if (!user)
       return res
         .status(400)
         .json({ message: "students is not found", status: "faild" });
 
     try {
-       assignRoll = await AssignRollnoModel.findOne({
-        student_id: student_id},{student_id:0,_id:0
-      });
+      assignRoll = await AssignRollnoModel.findOne(
+        {
+          student_id: student_id,
+        },
+        { student_id: 0, _id: 0, class_id: 0 }
+      );
     } catch (error) {}
 
     try {
       const assignTeacher = await AssignTeacherModel.findOne({
-        class_id: assignRoll.class_id,
+        class_id: user.class_id,
       });
-      teacher = await TeacherModel.findOne({
-        _id: assignTeacher.teacher_id},{fname:1,lname:1,qualification:1,surname:1,phone:1,teacher_picture:1});
+      teacher = await TeacherModel.findOne(
+        {
+          _id: assignTeacher.teacher_id,
+        },
+        {
+          fname: 1,
+          lname: 1,
+          qualification: 1,
+          surname: 1,
+          phone: 1,
+          teacher_picture: 1,
+          dob: 1,
+          email: 1,
+        }
+      );
     } catch (error) {}
-
 
     output = {
       student: user,
