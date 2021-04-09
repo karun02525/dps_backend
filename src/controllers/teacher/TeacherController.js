@@ -1,6 +1,6 @@
 import User from "../../models/TeacherModel.js";
 import Students from "../../models/StudentModel.js";
-import AssignClassModel from "../../models/AssignTeacherModel.js";
+import AssignTeacherModel from "../../models/AssignTeacherModel.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -55,10 +55,10 @@ export const getProfile = async (req, res) => {
 };
 
 // Get Students vai teacher id and section show list ------------------------------------------------------------------------
-export const getSt = async (req, res) => {
+export const getStudents = async (req, res) => {
   const teacher_id = req.query.teacher_id;
   try {
-    const data = await AssignClassModel.findOne({
+    const data = await AssignTeacherModel.findOne({
       teacher_id: teacher_id,
     });
     if (!data)
@@ -66,9 +66,10 @@ export const getSt = async (req, res) => {
         .status(400)
         .json({ message: "assign teacher is not found", status: "faild" });
 
-    const studentData = await Students.find({
-      class_id: data.class_id,
-    });
+    const studentData = await Students.find(
+      { class_id: data.class_id },
+      { parent_id: 0 }
+    );
     if (!studentData)
       return res
         .status(400)

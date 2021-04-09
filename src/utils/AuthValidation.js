@@ -81,7 +81,7 @@ export const teacherRegisterValidation = (data) => {
       .error(() => "Please enter valid mobile number"),
     email: Joi.string().min(5).max(40).required().email(),
     registration_no: Joi.string().min(1).max(10).required(),
-    qualification: Joi.string().min(3).max(15).required(),
+    qualification: Joi.string().min(3).max(25).required(),
     address: Joi.string().min(15).max(150).required(),
     post_office: Joi.string().min(4).max(15).required(),
     pincode: Joi.string()
