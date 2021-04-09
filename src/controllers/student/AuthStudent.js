@@ -92,15 +92,16 @@ export const loginParent = async (req, res) => {
 
   const userData = await User.aggregate([
     { $match: { parent_id: req.body.parent_id } },
+    { "$addFields": { "userId": { "$toString": "$_id" }}},
     {
       $lookup: {
         from: "rollno-assigns",
-        localField: "class_id",
-        foreignField: "class_id",
+        localField: "userId",
+        foreignField: "student_id",
         as: "classes",
       },
     },
-    { $unwind: "$classes" },
+   { $unwind: "$classes" },
     {
       $project: {
         fname: 1,

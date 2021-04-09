@@ -1,6 +1,7 @@
 import User from "../../models/StudentModel.js";
-import Teacher from "../../models/TeacherModel.js";
-import AssignClassModel from "../../models/AssignTeacherModel.js";
+import TeacherModel from "../../models/TeacherModel.js";
+import AssignTeacherModel from "../../models/AssignTeacherModel.js";
+import AssignRollnoModel from "../../models/AssignRollnoModel.js";
 import mongoose from "mongoose";
 
 // -------------------------------------------------------
@@ -20,53 +21,45 @@ export const getUsers = async (req, res) => {
 //----------Get Profile students or teacher-----------------------------------
 export const getProfile = async (req, res) => {
   const student_id = req.query.student_id;
-  let teacherData = null;
+  let output = null;
+  let assignRoll=null;
+  let teacher=null;
   try {
     if (student_id.length != 24)
       return res.status(400).json({ message: "Please valid id" });
 
     //checking if the user exist
-    const user = await User.findOne({ _id: student_id });
+    const user = await User.findOne({ _id: student_id },{class_id:0});
     if (!user)
       return res
         .status(400)
         .json({ message: "students is not found", status: "faild" });
 
-    const userData = await User.aggregate([
-      { $match: { _id: mongoose.Types.ObjectId(student_id) } },
-      {
-        $lookup: {
-          from: "rollno-assigns",
-          localField: "class_id",
-          foreignField: "class_id",
-          as: "classes",
-        },
-      },
-      { $unwind: "$classes" },
-      {
-        $lookup: {
-          from: "teacher-assigns",
-          localField: "class_id",
-          foreignField: "class_id",
-          as: "teacher-assigns",
-        },
-      },
-      { $unwind: "$teacher-assigns" },
-      {
-        $lookup: {
-          from: "reg-teachers",
-          localField: "teacher_id",
-          foreignField: "teacher_id",
-          as: "reg-teachers",
-        },
-      },
-      { $unwind: "$reg-teachers" },
-    ]);
+    try {
+       assignRoll = await AssignRollnoModel.findOne({
+        student_id: student_id},{student_id:0,_id:0
+      });
+    } catch (error) {}
+
+    try {
+      const assignTeacher = await AssignTeacherModel.findOne({
+        class_id: assignRoll.class_id,
+      });
+      teacher = await TeacherModel.findOne({
+        _id: assignTeacher.teacher_id},{fname:1,lname:1,qualification:1,surname:1,phone:1,teacher_picture:1});
+    } catch (error) {}
+
+
+    output = {
+      student: user,
+      class_info: assignRoll,
+      teacher: teacher,
+    };
 
     res.json({
       message: "geting data successfully",
       status: "success",
-      data: userData,
+      data: output,
     });
   } catch (error) {
     res.status(500).send({ message: "something went wrong", status: "faild" });

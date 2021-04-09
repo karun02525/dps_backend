@@ -85,8 +85,8 @@ export const getParents = async (req, res) => {
 export const getStudents = async (req, res) => {
   const class_id = req.query.class_id;
   try {
-    const data = await StudentModel.find({ class_id: class_id});
-    if (Array.isArray(data) && data.length===0)
+    const data = await StudentModel.find({ class_id: class_id });
+    if (Array.isArray(data) && data.length === 0)
       return res
         .status(400)
         .json({ message: "students is not found", status: "faild" });
@@ -132,9 +132,29 @@ export const assignRollno = async (req, res) => {
 
   const studentExist = await AssignRollnoModel.findOne({
     student_id: req.body.student_id,
+    section: req.body.section,
+    roll_no: req.body.roll_no,
   });
 
   if (studentExist)
+    return res
+      .status(400)
+      .json({ message: "the student roll no already exits" });
+
+  const sectionExist = await AssignRollnoModel.findOne({
+    section: req.body.section,
+  });
+
+  if (sectionExist)
+    return res
+      .status(400)
+      .json({ message: "the student section already exits" });
+
+  const rollExist = await AssignRollnoModel.findOne({
+    roll_no: req.body.roll_no,
+  });
+
+  if (rollExist)
     return res
       .status(400)
       .json({ message: "the student roll no already exits" });
@@ -196,4 +216,3 @@ export const getAssignTeacher = async (req, res) => {
 //     res.status(500).send({ message: "something went wrong", status: "faild" });
 //   }
 // };
-
