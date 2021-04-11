@@ -54,18 +54,12 @@ export const getProfile = async (req, res) => {
   }
 };
 
-
-
 // Get Students vai teacher id and section show list ------------------------------------------------------------------------
 export const getStudents = async (req, res) => {
   //const teacher_id = req.query.teacher_id;
   const class_id = req.query.class_id;
   const section = req.query.section;
- let output=null; 
- let class_info=null;
- try{
-  
-  
+  try {
     const studentData = await StudentsModel.aggregate([
       { $match: { class_id: class_id } },
       { $addFields: { userId: { $toString: "$_id" } } },
@@ -77,18 +71,13 @@ export const getStudents = async (req, res) => {
           as: "classes",
         },
       },
-      { $match: { "classes.section":section } },
+      { $match: { "classes.section": section } },
       { $unwind: "$classes" },
     ]);
-  
-    output={
-         student:studentData,
-         class_info:class_info
-        }
 
     res.json({
       message: "students list",
-      data: output,
+      data: studentData,
       status: "success",
     });
   } catch (error) {
@@ -96,27 +85,31 @@ export const getStudents = async (req, res) => {
   }
 };
 
-
 // getDashboard vai teacher id  show list ------------------------------------------------------------------------
 export const getDashboard = async (req, res) => {
   const teacher_id = req.query.teacher_id;
-  let output=null;
-  let classes=null;
+  let output = null;
+  let classes = null;
   try {
     //checking if the user exist
-      const user = await TeacherModel.findOne({ _id: teacher_id });
-      if (!user)
-          return res.status(400).json({ message: "teacher is not found", status: "faild" });
+    const user = await TeacherModel.findOne({ _id: teacher_id });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "teacher is not found", status: "faild" });
 
-      try{    
-       classes = await AssignTeacherModel.findOne({ teacher_id: teacher_id },{_id:0,teacher_id:0});
-      }catch(erro){}
+    try {
+      classes = await AssignTeacherModel.findOne(
+        { teacher_id: teacher_id },
+        { _id: 0, teacher_id: 0 }
+      );
+    } catch (erro) {}
 
-    output={
-      teacher:user,
-      class_info:classes,
-      banner:null
-    }      
+    output = {
+      teacher: user,
+      class_info: classes,
+      banner: null,
+    };
 
     res.json({
       message: "dashboard list",
