@@ -1,10 +1,10 @@
-import User from "../../models/TeacherModel.js";
-import Students from "../../models/StudentModel.js";
+import TeacherModel from "../../models/TeacherModel.js";
+import StudentsModel from "../../models/StudentModel.js";
 import AssignTeacherModel from "../../models/AssignTeacherModel.js";
 
 export const getUsers = async (req, res) => {
   try {
-    const data = await User.find();
+    const data = await TeacherModel.find();
     res.json({
       message: "geting data successfully",
       data: data,
@@ -17,7 +17,7 @@ export const getUsers = async (req, res) => {
 
 export const getuser = async (req, res) => {
   try {
-    const data = await User.findOne({
+    const data = await TeacherModel.findOne({
       registration_no: req.params.id,
     });
     res.json({
@@ -38,7 +38,7 @@ export const getProfile = async (req, res) => {
       return res.status(400).json({ message: "Please valid id" });
 
     //checking if the user exist
-    const user = await Teacher.findOne({ _id: teacher_id });
+    const user = await TeacherModel.findOne({ _id: teacher_id });
     if (!user)
       return res
         .status(400)
@@ -54,30 +54,73 @@ export const getProfile = async (req, res) => {
   }
 };
 
+
+
 // Get Students vai teacher id and section show list ------------------------------------------------------------------------
 export const getStudents = async (req, res) => {
-  const teacher_id = req.query.teacher_id;
-  try {
-    const data = await AssignTeacherModel.findOne({
-      teacher_id: teacher_id,
-    });
-    if (!data)
-      return res
-        .status(400)
-        .json({ message: "assign teacher is not found", status: "faild" });
-
-    const studentData = await Students.find(
-      { class_id: data.class_id },
-      { parent_id: 0 }
-    );
-    if (!studentData)
-      return res
-        .status(400)
-        .json({ message: "students is not found", status: "faild" });
+  //const teacher_id = req.query.teacher_id;
+  const class_id = req.query.class_id;
+  const section = req.query.section;
+ let output=null; 
+ let class_info=null;
+ try{
+  
+  
+    const studentData = await StudentsModel.aggregate([
+      { $match: { class_id: class_id } },
+      { $addFields: { userId: { $toString: "$_id" } } },
+      {
+        $lookup: {
+          from: "rollno-assigns",
+          localField: "userId",
+          foreignField: "student_id",
+          as: "classes",
+        },
+      },
+      { $match: { "classes.section":section } },
+      { $unwind: "$classes" },
+    ]);
+  
+    output={
+         student:studentData,
+         class_info:class_info
+        }
 
     res.json({
       message: "students list",
-      data: studentData,
+      data: output,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
+
+// getDashboard vai teacher id  show list ------------------------------------------------------------------------
+export const getDashboard = async (req, res) => {
+  const teacher_id = req.query.teacher_id;
+  let output=null;
+  let classes=null;
+  try {
+    //checking if the user exist
+      const user = await TeacherModel.findOne({ _id: teacher_id });
+      if (!user)
+          return res.status(400).json({ message: "teacher is not found", status: "faild" });
+
+      try{    
+       classes = await AssignTeacherModel.findOne({ teacher_id: teacher_id },{_id:0,teacher_id:0});
+      }catch(erro){}
+
+    output={
+      teacher:user,
+      class_info:classes,
+      banner:null
+    }      
+
+    res.json({
+      message: "dashboard list",
+      data: output,
       status: "success",
     });
   } catch (error) {

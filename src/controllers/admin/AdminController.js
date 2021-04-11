@@ -107,11 +107,21 @@ export const assignTeacher = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const teacherExist = await AssignTeacherModel.findOne({
-    teacher_id: req.body.teacher_id,
+    teacher_id: req.body.teacher_id
   });
 
   if (teacherExist)
     return res.status(400).json({ message: "teacher already assign" });
+
+  const sectionExist = await AssignTeacherModel.findOne(
+    { $and: [ { section: { $eq: req.body.section } },
+      { class_id: { $eq: req.body.class_id } },
+     ]});
+  
+    if (sectionExist)
+      return res.status(400).json({ message: "section or class already assign" });
+  
+        
 
   try {
     const savedData = await new AssignTeacherModel(req.body).save();
@@ -131,31 +141,22 @@ export const assignRollno = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const studentExist = await AssignRollnoModel.findOne({
-    student_id: req.body.student_id,
-    section: req.body.section,
-    roll_no: req.body.roll_no,
+    student_id: req.body.student_id
   });
 
   if (studentExist)
     return res.status(400).json({ message: "the student already exits" });
 
-  const sectionExist = await AssignRollnoModel.findOne({
-    section: req.body.section,
-  });
 
+  const sectionExist = await AssignRollnoModel.findOne(
+      { $and: [ { section: { $eq: req.body.section } },
+        { roll_no: { $eq: req.body.roll_no } },
+       ]});
+    
   if (sectionExist)
-    return res
-      .status(400)
-      .json({ message: "the student section already exits" });
-
-  const rollExist = await AssignRollnoModel.findOne({
-    roll_no: req.body.roll_no,
-  });
-
-  if (rollExist)
-    return res
-      .status(400)
-      .json({ message: "the student roll no already exits" });
+        return res.status(400).json({ message: "section or class already assign" });
+  
+  
 
   // const user = await Student.findOneAndUpdate(
   //   { _id: req.body.student_id },

@@ -109,7 +109,7 @@ export const teacherRegisterValidation = (data) => {
 export const teacherLoginValidation = (data) => {
   const schema = {
     registration_no: Joi.string().min(2).max(10).required(),
-    password: Joi.string().min(5).max(20).required(),
+    password: Joi.string().min(3).max(20).required(),
   };
   return Joi.validate(data, schema);
 };

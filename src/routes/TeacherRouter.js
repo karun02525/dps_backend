@@ -5,7 +5,10 @@ import { auth } from "../utils/verifyToken.js";
 import {
   getUsers,
   getStudents,
+  getDashboard,
 } from "../controllers/teacher/TeacherController.js";
+
+router.get("/dashboard", getDashboard);
 
 router.get("/get-students", getStudents);
 
