@@ -3,6 +3,7 @@ import TeacherModel from "../../models/TeacherModel.js";
 import AssignTeacherModel from "../../models/AssignTeacherModel.js";
 import AssignRollnoModel from "../../models/AssignRollnoModel.js";
 import mongoose from "mongoose";
+import StudentAttenModel from "../../models/StudentAttenModel.js";
 
 // -------------------------------------------------------
 export const getUsers = async (req, res) => {
@@ -91,6 +92,8 @@ export const getAttendance = async (req, res) => {
 
     //checking if the user exist
 
+    const data = await StudentAttenModel.find({ student_id: student_id });
+
     output = {
       teacher_id: "T3453",
       class_id: "C43553",
@@ -101,23 +104,7 @@ export const getAttendance = async (req, res) => {
         holiday: 6,
         leave: 1,
       },
-      attlist: [
-        {
-          student_id: "S1234",
-          att_type: 1,
-          atten_date: "2021-04-10",
-        },
-        {
-          student_id: "S1502",
-          att_type: 2,
-          atten_date: "2021-04-12",
-        },
-        {
-          student_id: "S1502",
-          att_type: 3,
-          atten_date: "2021-03-29",
-        },
-      ],
+      attlist: data,
     };
 
     res.json({

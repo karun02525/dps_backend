@@ -7,6 +7,9 @@ export const attendanceValidation = (data) => {
     section: Joi.string().min(1).max(2).required(),
     attlist: Joi.array()
       .items({
+        class_id: Joi.string().min(2).max(24).required(),
+        teacher_id: Joi.string().min(2).max(24).required(),
+        section: Joi.string().min(1).max(2).required(),
         student_id: Joi.string().min(2).max(24).required(),
         att_type: Joi.number().min(1).max(5).required(),
       })
