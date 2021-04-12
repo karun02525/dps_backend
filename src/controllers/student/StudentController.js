@@ -80,3 +80,52 @@ export const getProfile = async (req, res) => {
     res.status(500).send({ message: "something went wrong", status: "faild" });
   }
 };
+
+//----------Get Profile students or teacher-----------------------------------
+export const getAttendance = async (req, res) => {
+  const student_id = req.query.student_id;
+  let output = null;
+  try {
+    if (student_id.length != 24)
+      return res.status(400).json({ message: "Please valid id" });
+
+    //checking if the user exist
+
+    output = {
+      teacher_id: "T3453",
+      class_id: "C43553",
+      section: "B",
+      analytics: {
+        present: 13,
+        absent: 2,
+        holiday: 6,
+        leave: 1,
+      },
+      attlist: [
+        {
+          student_id: "S1234",
+          att_type: 1,
+          atten_date: "2021-04-10",
+        },
+        {
+          student_id: "S1502",
+          att_type: 2,
+          atten_date: "2021-04-12",
+        },
+        {
+          student_id: "S1502",
+          att_type: 3,
+          atten_date: "2021-03-29",
+        },
+      ],
+    };
+
+    res.json({
+      message: "attendance data successfully",
+      status: "success",
+      data: output,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};

@@ -6,11 +6,14 @@ import {
   getUsers,
   getStudents,
   getDashboard,
+  createAttendance,
 } from "../controllers/teacher/TeacherController.js";
 
 router.get("/dashboard", getDashboard);
 
 router.get("/get-students", getStudents);
+
+router.post("/attendance", createAttendance);
 
 router.get("/", getUsers);
 

@@ -1,6 +1,8 @@
 import TeacherModel from "../../models/TeacherModel.js";
 import StudentsModel from "../../models/StudentModel.js";
 import AssignTeacherModel from "../../models/AssignTeacherModel.js";
+import { attendanceValidation } from "../../utils/Validation.js";
+import AttendanceModel from "../../models/AttendanceModel.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -116,6 +118,46 @@ export const getDashboard = async (req, res) => {
       data: output,
       status: "success",
     });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};
+
+export const createAttendance = async (req, res) => {
+  try {
+    const nowDate = new Date().toLocaleDateString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    const { error } = attendanceValidation(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+
+    const checkAtten = await AttendanceModel.findOne({ date: nowDate }); //"2021-04-13"
+    if (checkAtten)
+      return res.status(400).json({ message: "Attendance already submited" });
+
+    //submit attendance
+    const attenParam = new AttendanceModel(req.body);
+    try {
+      attenParam.datetime = new Date()
+        .toISOString()
+        .replace(/T/, " ")
+        .replace(/\..+/, "");
+
+      attenParam.date = nowDate;
+
+      const savedAtten = await attenParam.save();
+      res.status(201).json({
+        status: "success",
+        message: "Attendance submited successfully",
+        data: { _id: savedAtten._id },
+      });
+    } catch (error) {
+      res.status(500).send(error);
+    }
   } catch (error) {
     res.status(500).send({ message: "something went wrong", status: "faild" });
   }
