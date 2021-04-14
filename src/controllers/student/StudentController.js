@@ -116,3 +116,58 @@ export const getAttendance = async (req, res) => {
     res.status(500).send({ message: "something went wrong", status: "faild" });
   }
 };
+
+// getDashboard vai parent id  show list ------------------------------------------------------------------------
+export const getDashboard = async (req, res) => {
+  const parent_id = req.query.parent_id;
+  let output = null;
+  let userData = null;
+  try {
+    //checking if the user exist
+    const user = await User.findOne({ parent_id: parent_id });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "parent_id is not found", status: "faild" });
+
+    try {
+      userData = await User.aggregate([
+        { $match: { parent_id: parent_id } },
+        { $addFields: { userId: { $toString: "$_id" } } },
+        {
+          $lookup: {
+            from: "rollno-assigns",
+            localField: "userId",
+            foreignField: "student_id",
+            as: "classes",
+          },
+        },
+        { $unwind: "$classes" },
+        {
+          $project: {
+            fname: 1,
+            lname: 1,
+            surname: 1,
+            class_id: 1,
+            student_picture: 1,
+            class_name: "$classes.class_name",
+            section: "$classes.section",
+            roll_no: "$classes.roll_no",
+          },
+        },
+      ]);
+    } catch (error) {}
+    output = {
+      students: userData,
+      banner: null,
+    };
+
+    res.json({
+      message: "dashboard list",
+      data: output,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).send({ message: "something went wrong", status: "faild" });
+  }
+};

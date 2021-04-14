@@ -6,9 +6,12 @@ import {
   getUsers,
   getProfile,
   getAttendance,
+  getDashboard,
 } from "../controllers/student/StudentController.js";
 
 router.get("/get-profile", getProfile);
+
+router.get("/dashboard", getDashboard);
 
 router.get("/get-attendance", getAttendance);
 

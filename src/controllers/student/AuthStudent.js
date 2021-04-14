@@ -90,36 +90,9 @@ export const loginParent = async (req, res) => {
   //Create and assign a token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
 
-  const userData = await User.aggregate([
-    { $match: { parent_id: req.body.parent_id } },
-    { $addFields: { userId: { $toString: "$_id" } } },
-    {
-      $lookup: {
-        from: "rollno-assigns",
-        localField: "userId",
-        foreignField: "student_id",
-        as: "classes",
-      },
-    },
-    { $unwind: "$classes" },
-    {
-      $project: {
-        fname: 1,
-        lname: 1,
-        surname: 1,
-        class_id: 1,
-        student_picture: 1,
-        class_name: "$classes.class_name",
-        section: "$classes.section",
-        roll_no: "$classes.roll_no",
-      },
-    },
-  ]);
-
   //const classData = await AssignRollnoModel.find({});
 
   const response = {
-    students: userData,
     parent_id: req.body.parent_id,
     token: token,
   };
